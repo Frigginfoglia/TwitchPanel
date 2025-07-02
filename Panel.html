@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identify Evidence Checklist</title>
+<style>
+  body { background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Courier New', monospace; }
+  .phone { width: 375px; height: 667px; background: #0b0000; border: 16px solid #333; border-radius: 36px; box-shadow: 0 0 20px #000; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .content { padding: 20px; color: #ffcccc; text-align: center; flex: 1; overflow-y: auto; }
+  h1, h2 { color: #ffdddd; margin-bottom: 20px; }
+  .arrow { cursor: pointer; color: #ffdddd; margin-bottom: 10px; display: inline-block; }
+  ul { list-style: none; padding: 0; max-width: 300px; margin: 0 auto 20px auto; }
+  li { background: rgba(50,0,0,0.8); margin: 8px 0; padding: 12px; border-radius: 6px; cursor: pointer; transition: all 0.3s; text-shadow: 0 0 2px #ff0000; }
+  li.checked { background: rgba(200,0,0,0.8); color: #fff; }
+  li.excluded { background: rgba(80,0,0,0.8); color: #ff9999; text-decoration: line-through; }
+  li.ruledout { background: #000 !important; color: #666; }
+  .dropdown { display: none; margin-top: 5px; font-size: 0.9em; }
+  .dropdown li.active { background: #333 !important; color: #ffcccc; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="content" id="page1">
+    <div class="arrow" onclick="showGhostListPage()">➡ Ghost List</div>
+    <div class="arrow" onclick="showCleansePage()">⬅ Cleanse Mode Evidence</div>
+    <h1>Identify Evidence Checklist</h1>
+    <ul id="checklist">
+      <li onclick="toggleEvidence(this)">Writing</li>
+      <li onclick="toggleEvidence(this)">Audio</li>
+      <li onclick="toggleEvidence(this)">UV</li>
+      <li onclick="toggleEvidence(this)">Radiation</li>
+      <li onclick="toggleEvidence(this)">Thermal</li>
+      <li onclick="toggleEvidence(this)">EMF</li>
+    </ul>
+    <h2>Possible Ghosts</h2>
+    <ul id="ghostList"></ul>
+  </div>
+
+  <div class="content" id="page2" style="display:none;">
+    <div class="arrow" onclick="showChecklistPage()">⬅ Back</div>
+    <h1>Ghost Types</h1>
+    <ul>
+      <li onclick="this.classList.toggle('ruledout')">Banshee</li>
+      <li onclick="this.classList.toggle('ruledout')">Bhoot</li>
+      <li onclick="this.classList.toggle('ruledout')">Demon</li>
+      <li onclick="this.classList.toggle('ruledout')">Doppleganger</li>
+      <li onclick="this.classList.toggle('ruledout')">Iblis</li>
+      <li onclick="this.classList.toggle('ruledout')">Poltergeist</li>
+      <li onclick="this.classList.toggle('ruledout')">Revenant</li>
+      <li onclick="this.classList.toggle('ruledout')">Shura</li>
+      <li onclick="this.classList.toggle('ruledout')">Skia</li>
+      <li onclick="this.classList.toggle('ruledout')">Strigoi</li>
+      <li onclick="this.classList.toggle('ruledout')">Tantalus</li>
+      <li onclick="this.classList.toggle('ruledout')">Tariaksuq</li>
+      <li onclick="this.classList.toggle('ruledout')">The Echo</li>
+      <li onclick="this.classList.toggle('ruledout')">The Forgotten</li>
+      <li onclick="this.classList.toggle('ruledout')">Wewe Gombel</li>
+      <li onclick="this.classList.toggle('ruledout')">Wisp</li>
+      <li onclick="this.classList.toggle('ruledout')">Wraith</li>
+      <li onclick="this.classList.toggle('ruledout')">Phantom</li>
+    </ul>
+  </div>
+
+  <div class="content" id="page3" style="display:none;">
+    <div class="arrow" onclick="showChecklistPage()">⬅ Back</div>
+    <h1>Cleanse Mode Evidence</h1>
+    <ul>
+      <li onclick="toggleDropdown(this)">Writing<ul class="dropdown"><li onclick="selectSubtype(event,this)">Incomprehensible Scribbling</li><li onclick="selectSubtype(event,this)">Symbolic Enigmas</li><li onclick="selectSubtype(event,this)">Hostile Manifestations</li></ul></li>
+      <li onclick="toggleDropdown(this)">Audio<ul class="dropdown"><li onclick="selectSubtype(event,this)">Unintelligible Sound</li><li onclick="selectSubtype(event,this)">Single Word Responses</li><li onclick="selectSubtype(event,this)">Intelligible Phrases</li></ul></li>
+      <li onclick="toggleDropdown(this)">UV<ul class="dropdown"><li onclick="selectSubtype(event,this)">Faint Traces</li><li onclick="selectSubtype(event,this)">Moderate Residues</li><li onclick="selectSubtype(event,this)">Easily Identifiable Patterns</li></ul></li>
+      <li onclick="toggleDropdown(this)">Radiation<ul class="dropdown"><li onclick="selectSubtype(event,this)">Minimal</li><li onclick="selectSubtype(event,this)">Moderate</li><li onclick="selectSubtype(event,this)">Intense</li></ul></li>
+      <li onclick="toggleDropdown(this)">Thermal<ul class="dropdown"><li onclick="selectSubtype(event,this)">Mild</li><li onclick="selectSubtype(event,this)">Moderate</li><li onclick="selectSubtype(event,this)">Significant</li><li onclick="selectSubtype(event,this)">Frigid</li></ul></li>
+      <li onclick="toggleDropdown(this)">EMF<ul class="dropdown"><li onclick="selectSubtype(event,this)">Weak Anomalies</li><li onclick="selectSubtype(event,this)">Moderate Disturbances</li><li onclick="selectSubtype(event,this)">Strong Emissions</li><li onclick="selectSubtype(event,this)">Overwhelming Fields</li></ul></li>
+    </ul>
+  </div>
+</div>
+<script>
+let include=[], exclude=[];
+function toggleEvidence(el){const t=el.innerText;if(!el.classList.contains('checked')&&!el.classList.contains('excluded')){el.classList.add('checked');include.push(t);}else if(el.classList.contains('checked')){el.classList.remove('checked');el.classList.add('excluded');include=include.filter(e=>e!==t);exclude.push(t);}else{el.classList.remove('excluded');exclude=exclude.filter(e=>e!==t);}updateGhosts();}
+const ghostData={Banshee:['Audio','EMF','Radiation'],Bhoot:['Radiation','Thermal','Writing'],Demon:['Radiation','UV','Writing'],Doppleganger:['Audio','UV','Writing'],Iblis:['Audio','Thermal','Writing'],Poltergeist:['EMF','UV','Writing'],Revenant:['EMF','Radiation','Writing'],Shura:['EMF','Thermal','Writing'],Skia:['Audio','EMF','UV'],Strigoi:['Thermal','UV','Writing'],Tantalus:['EMF','Thermal','UV'],Tariaksuq:['Audio','EMF','Thermal'],'The Echo':['Radiation','Thermal','UV'],'The Forgotten':['EMF','Radiation','UV'],'Wewe Gombel':['EMF','Radiation','Thermal'],Wisp:['Audio','Radiation','Thermal'],Wraith:['Audio','Thermal','UV'],Phantom:['Radiation','Audio','UV']};
+function updateGhosts(){const list=document.getElementById('ghostList');list.innerHTML='';Object.entries(ghostData).forEach(([g,e])=>{if(include.every(ev=>e.includes(ev))&&exclude.every(ev=>!e.includes(ev))){const li=document.createElement('li');li.textContent=g;list.appendChild(li);}});}
+function toggleDropdown(el){const d=el.querySelector('.dropdown');d.style.display=d.style.display==='block'?'none':'block';}
+function selectSubtype(e,i){e.stopPropagation();const p=i.parentElement;if(i.classList.contains('active'))i.classList.remove('active');else{p.querySelectorAll('li').forEach(li=>li.classList.remove('active'));i.classList.add('active');}}
+function showGhostListPage(){document.getElementById('page1').style.display='none';document.getElementById('page2').style.display='block';document.getElementById('page3').style.display='none';}
+function showChecklistPage(){document.getElementById('page1').style.display='block';document.getElementById('page2').style.display='none';document.getElementById('page3').style.display='none';}
+function showCleansePage(){document.getElementById('page1').style.display='none';document.getElementById('page2').style.display='none';document.getElementById('page3').style.display='block';}
+updateGhosts();
+</script>
+</body>
+</html>
